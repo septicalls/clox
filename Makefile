@@ -1,20 +1,27 @@
+# Compiler and compiler flags
 CC = gcc
-FLAGS = Wall -O3
+CFLAGS = -Wall -Iinclude
 
-clox: main.o chunk.o memory.o debug.o
-	$(CC) -o clox main.o chunk.o memory.o debug.o
+# Directories
+SRCDIR = src
+INCDIR = include
+OBJDIR = obj
 
-main: common.h
-	$(CC) $(FLAGS) main.c -o main.o
+# Source files and object files
+SOURCES = $(wildcard $(SRCDIR)/*.c)
+OBJECTS = $(patsubst $(SRCDIR)/%.c,$(OBJDIR)/%.o,$(SOURCES))
+EXECUTABLE = clox
 
-chunk: common.h chunk.h memory.h
-	$(CC) $(FLAGS) chunk.c -o chunk.o
+# Targets
+all: $(EXECUTABLE)
 
-memory: common.h memory.h
-	$(CC) $(FLAGS) memory.c -o memory.o
+$(EXECUTABLE): $(OBJECTS)
+	$(CC) $(CFLAGS) $(OBJECTS) -o $@
 
-debug: common.h debug.h
-	$(CC) $(FLAGS) debug.c -o debug.o
+$(OBJDIR)/%.o: $(SRCDIR)/%.c
+	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	rm *.o clox
+	rm -f $(OBJDIR)/*.o $(EXECUTABLE)
+
+.PHONY: all clean
