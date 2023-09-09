@@ -35,8 +35,11 @@ int main(int argc, char *argv[]) {
     // Put 4 / -5 on the stack
     writeChunk(&chunk, OP_DIVIDE, 3);
 
-    // Put (2 * 3) - (4 / -5) on the stack
-    writeChunk(&chunk, OP_SUBTRACT, 7);
+    // Put -(4 / -5) on the stack
+    writeChunk(&chunk, OP_NEGATE, 7);
+
+    // Put (2 * 3) + (-(4 / -5)) on the stack
+    writeChunk(&chunk, OP_ADD, 7);
 
     // Load 1 onto the stack
     constant = addConstant(&chunk, 1);
