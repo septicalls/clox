@@ -1,6 +1,6 @@
 # clox
 
-My implementation of clox as described by Robert Nystrom in [crafting interpreters](https://craftinginterpreters.com/contents.html).crafting interpreters.
+My implementation of clox as described by Robert Nystrom in [crafting interpreters](https://craftinginterpreters.com/contents.html).
 
 ## Challenges
 - [x] Devised an efficient method for encoding line information.
