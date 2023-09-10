@@ -2,12 +2,24 @@
 
 #include "common.h"
 #include "debug.h"
+#include "memory.h"
 #include "vm.h"
+
+#define STACK_BUFFER_SIZE 256
 
 VM vm;
 
 static void resetStack() {
+    vm.stack = GROW_ARRAY(Value, vm.stack, 0, STACK_BUFFER_SIZE);
     vm.stackTop = vm.stack;
+    vm.stackLimit = vm.stack + STACK_BUFFER_SIZE;
+}
+
+static void updateStack() {
+    uint64_t stackSize = vm.stackLimit - vm.stack;
+    vm.stack = GROW_ARRAY(Value, vm.stack, stackSize, stackSize + STACK_BUFFER_SIZE);
+    vm.stackTop = vm.stack + stackSize;
+    vm.stackLimit = vm.stack + stackSize + STACK_BUFFER_SIZE;
 }
 
 void initVM() {
@@ -15,10 +27,13 @@ void initVM() {
 }
 
 void freeVM() {
-
+    FREE_ARRAY(Value, vm.stack, vm.stackLimit - vm.stack);
 }
 
 void push(Value value) {
+    if (vm.stackTop == vm.stackLimit) {
+        updateStack();
+    }
     *vm.stackTop = value;
     vm.stackTop++;
 }
