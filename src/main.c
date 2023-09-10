@@ -15,6 +15,8 @@ int main(int argc, char *argv[]) {
     writeChunk(&chunk, OP_CONSTANT, 2);
     writeChunk(&chunk, constant, 2);
 
+    writeConstant(&chunk, 355 / 113.0, 3);
+
     writeChunk(&chunk, OP_RETURN, 3);
 
     disassembleChunk(&chunk, "Trying out new line numbers");
