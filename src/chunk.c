@@ -56,3 +56,11 @@ void updateLineArray(Chunk *chunk, int line) {
         chunk->lines[i] = 0;
     }
 }
+
+void writeConstant(Chunk* chunk, Value value, int line) {
+    writeChunk(chunk, OP_CONSTANT_LONG, line);
+    int offset = addConstant(chunk, value);
+    writeChunk(chunk, offset % (1 << 8), line);
+    writeChunk(chunk, offset >> 8, line);
+    writeChunk(chunk, offset >> 16, line);
+}
