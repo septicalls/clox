@@ -6,13 +6,18 @@ int main(int argc, char *argv[]) {
     Chunk chunk;
     initChunk(&chunk);
 
+    // Gibberish instructions to test line numbers
     int constant = addConstant(&chunk, 1.2);
-    writeChunk(&chunk, OP_CONSTANT, 123);
-    writeChunk(&chunk, constant, 123);
+    writeChunk(&chunk, OP_CONSTANT, 1);
+    writeChunk(&chunk, constant, 1);
 
-    writeChunk(&chunk, OP_RETURN, 123);
+    constant = addConstant(&chunk, 2.1);
+    writeChunk(&chunk, OP_CONSTANT, 2);
+    writeChunk(&chunk, constant, 2);
 
-    disassembleChunk(&chunk, "test chunk");
+    writeChunk(&chunk, OP_RETURN, 3);
+
+    disassembleChunk(&chunk, "Trying out new line numbers");
     freeChunk(&chunk);
     return 0;
 }
