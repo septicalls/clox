@@ -3,11 +3,14 @@
 #include "chunk.h"
 #include "memory.h"
 
+#define LINE_BUFFER_SIZE 256
+
 void initChunk(Chunk *chunk) {
     chunk->count = 0;
     chunk->capacity = 0;
     chunk->code = NULL;
     chunk->lines = NULL;
+    chunk->lineCapacity = 0;
     initValueArray(&chunk->constants);
 }
 
@@ -24,12 +27,23 @@ void writeChunk(Chunk *chunk, uint8_t byte, int line) {
         chunk->capacity = GROW_CAPACITY(oldCapacity);
         chunk->code = GROW_ARRAY(uint8_t, chunk->code,
             oldCapacity, chunk->capacity);
+    }
+
+    // This snippet assumes that line number can only be a 
+    // positive integer in non-decreasing order
+    if (chunk->lineCapacity < line) {
+        int oldLineCapacity = chunk->lineCapacity;
+        chunk->lineCapacity += LINE_BUFFER_SIZE;
         chunk->lines = GROW_ARRAY(int, chunk->lines,
-            oldCapacity, chunk->capacity);
+            oldLineCapacity, chunk->lineCapacity);
+        for (int i = oldLineCapacity; i < chunk->lineCapacity; i++) {
+            chunk->lines[i] = 0;
+        }
     }
 
     chunk->code[chunk->count] = byte;
-    chunk->lines[chunk->count] = line;
+    // This works only for non-decreasing line numbers
+    chunk->lines[line]++;
     chunk->count++;
 }
 
