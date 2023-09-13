@@ -14,7 +14,12 @@ static void repl() {
     while (true) {
         // This allows for an editable prompt
         char *line = readline("> ");
-        add_history(line);
+
+        if (line == NULL) {
+            // This is to gracefully handle CTRL+D
+            exit(0);
+        }
+
         interpret(line);
         free(line);
     }
