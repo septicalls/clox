@@ -10,7 +10,7 @@ typedef struct {
     int line;
 } Scanner;
 
-Scanner scanner
+Scanner scanner;
 
 void initScanner(const char *source) {
     scanner.start = source;
@@ -41,7 +41,7 @@ static char peek() {
     return *scanner.current;
 }
 
-static chat peekNext() {
+static char peekNext() {
     if (isAtEnd()) return '\0';
     return scanner.current[1];
 }
@@ -59,6 +59,7 @@ static Token makeToken(TokenType type) {
     token.start = scanner.start;
     token.length = (int)(scanner.current - scanner.start);
     token.line = scanner.line;
+    return token;
 }
 
 static Token errorToken(const char *message) {
@@ -95,7 +96,7 @@ static void skipWhitespace() {
     }
 }
 
-static TokenType checkKeyword(int start, int length
+static TokenType checkKeyword(int start, int length,
     const char *rest, TokenType type) {
     if (scanner.current - scanner.start == start + length &&
         memcmp(scanner.start + start, rest, length) == 0) {
@@ -125,6 +126,14 @@ static TokenType identifierType() {
         case 'p': return checkKeyword(1, 4, "rint", TOKEN_PRINT);
         case 'r': return checkKeyword(1, 5, "eturn", TOKEN_RETURN);
         case 's': return checkKeyword(1, 4, "uper", TOKEN_SUPER);
+        case 't':
+            if (scanner.current - scanner.start > 1) {
+                switch (scanner.start[1]) {
+                    case 'h': return checkKeyword(2, 2, "is", TOKEN_THIS);
+                    case 'r': return checkKeyword(2, 2, "ue", TOKEN_TRUE);
+                }
+            }
+            break;
         case 'v': return checkKeyword(1, 2, "ar", TOKEN_VAR);
         case 'w': return checkKeyword(1, 4, "hile", TOKEN_WHILE);
     }
