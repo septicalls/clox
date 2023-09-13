@@ -27,6 +27,15 @@ static char advance() {
     return scanner.current[-1];
 }
 
+static char peek() {
+    return *scanner.current;
+}
+
+static chat peekNext() {
+    if (isAtEnd()) return '\0';
+    return scanner.current[1];
+}
+
 static bool match(const char expected) {
     if (isAtEnd()) return false;
     if (*scanner.current != expected) return false;
@@ -51,7 +60,33 @@ static Token errorToken(const char *message) {
     return token;
 }
 
+static void skipWhitespace() {
+    for (;;) {
+        char c = peek();
+        switch(c) {
+            case ' ':
+            case '\r':
+            case '\t':
+                advance();
+                break;
+            case '\n':
+                scanner.line++;
+                advance();
+                break;
+            case '/':
+                if (peekNext() == '/') {
+                    while(peek() != '\n' && !isAtEnd()) advance();
+                } else {
+                    return;
+                }
+            default:
+                return;
+        }
+    }
+}
+
 Token scanToken() {
+    skipWhitespace();
     scanner.start = scanner.current;
 
     char c = advance();
