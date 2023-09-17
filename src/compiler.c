@@ -109,6 +109,20 @@ static void endCompiler() {
     emitReturn();
 }
 
+static void binary() {
+    TokenType operatorType = parser.previous.type;
+    ParseRule *rule = getRule(operatorType);
+    parsePrecedence((Precedence)(rule->precedence + 1));
+
+    switch(operatorType) {
+        case TOKEN_PLUS:        emitByte(OP_ADD); break;
+        case TOKEN_MINUS:       emitByte(OP_MINUS); break;
+        case TOKEN_STAR:        emitByte(OP_STAR); break;
+        case TOKEN_SLASH:       emitByte(OP_SLASH); break;
+        default: return; // Unreachabe
+    }
+}
+
 static void grouping() {
     expression();
     consume(TOKEN_RIGHT_PAREN, "Expect '(' after expression.");
