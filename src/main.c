@@ -15,6 +15,9 @@ static void repl() {
         // This allows for an editable prompt
         char *line = readline("> ");
 
+        // This enables scrolling through previous commands
+        add_history(line);
+
         if (line == NULL) {
             // This is to gracefully handle CTRL+D
             exit(0);
