@@ -176,6 +176,8 @@ Token scanToken() {
     skipWhitespace();
     scanner.start = scanner.current;
 
+    if (isAtEnd()) return makeToken(TOKEN_EOF);
+
     char c = advance();
     if (isAlpha(c)) return identifier();
     if (isDigit(c)) return number();
@@ -202,8 +204,6 @@ Token scanToken() {
             match('=') ? TOKEN_GREATER_EQUAL : TOKEN_GREATER);
         case '"': return string();
     }
-
-    if (isAtEnd()) return makeToken(TOKEN_EOF);
 
     return errorToken("Unexpected character.");
 };
