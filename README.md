@@ -10,3 +10,4 @@ My implementation of clox as described by Robert Nystrom in [crafting interprete
 - [x] Substituted OP_NEGATE for OP_SUBTRACT.
 - [x] Made VM stack dynamically grown.
 - [x] Made OP_NEGATE work in-place.
+- [ ] Parsed C-style `?:` (ternary operator).
