@@ -20,7 +20,7 @@ static void repl() {
 
         if (line == NULL) {
             // This is to gracefully handle CTRL+D
-            exit(0);
+            return;
         }
 
         interpret(line);
