@@ -11,5 +11,5 @@ My implementation of clox as described by Robert Nystrom in [crafting interprete
 - [x] Made VM stack dynamically grown.
 - [x] Made OP_NEGATE work in-place.
 - [ ] Parsed C-style `?:` (ternary operator).
-- [ ] Made ObjString own its character array with [flexible array members](https://en.wikipedia.org/wiki/Flexible_array_member) technique.
-- [ ] Made ObjString differentiate between heap owned strings and source string literals.
+- [x] Made ObjString own its character array with [flexible array members](https://en.wikipedia.org/wiki/Flexible_array_member) technique.
+- [x] Made ObjString differentiate between heap owned strings and source string literals.
