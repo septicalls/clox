@@ -26,6 +26,15 @@ struct ObjString {
 };
 
 ObjString *copyString(const char *chars, int length);
+void printValue(Value value);
+
+void printValue(Value value) {
+    switch (OBJ_TYPE(value)) {
+        case OBJ_STRING:
+            printf("%s", AS_CSTRING(value));
+            break;
+    }
+}
 
 static inline bool isObjType(Value value, ObjType type) {
     return IS_OBJ(value) && AS_OBJ(value)->type == type;
