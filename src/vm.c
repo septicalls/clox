@@ -5,7 +5,7 @@
 #include "common.h"
 #include "compiler.h"
 #include "debug.h"
-#include "onject.h"
+#include "object.h"
 #include "memory.h"
 #include "vm.h"
 
@@ -60,9 +60,9 @@ static void concatenate() {
     ObjString *a = AS_STRING(pop());
 
     int length = a->length + b->length;
-    char *chars = ALLOCATE(chars, length + 1);
+    char *chars = ALLOCATE(char, length + 1);
     memcpy(chars, a->chars, a->length);
-    memcmp(chars + a->length, b->chars, b->length);
+    memcpy(chars + a->length, b->chars, b->length);
     chars[length] = '\0';
 
     ObjString *result = takeString(chars, length);
