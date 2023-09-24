@@ -9,7 +9,8 @@
 #define IS_STRING(value)        isObjType(value, OBJ_STRING)
 
 #define AS_STRING(value)        ((ObjString *)AS_OBJ(value))
-#define AS_CSTRING(value)       (((ObjString *)AS_OBJ(value))->chars)
+#define AS_CSTRING(value) \
+    (char *)getString((ObjString *)AS_OBJ(value))
 
 typedef enum {
     OBJ_STRING
@@ -23,12 +24,15 @@ struct Obj {
 struct ObjString {
     Obj obj;
     int length;
+    bool owned;
+    char *ownedString;
     char chars[];
 };
 
-// Got rid of takeString as ObjString can now no longer takes char *s
-ObjString *copyString(const char *chars, int length);
+ObjString *takeString(char *chars, int length);
+ObjString *makeString(const char *chars, int length);
 void printObject(Value value);
+char *getString(ObjString *string);
 
 static inline bool isObjType(Value value, ObjType type) {
     return IS_OBJ(value) && AS_OBJ(value)->type == type;

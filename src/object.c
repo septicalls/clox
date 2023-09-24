@@ -21,9 +21,19 @@ static Obj* allocateObject(size_t size, ObjType type) {
     return object;
 }
 
-ObjString *copyString(const char *chars, int length) {
+ObjString *takeString(char *chars, int length) {
     ObjString *string = ALLOCATE_STR(length);
     string->length = length;
+    string->owned = true;
+    string->ownedString = chars;
+    return string;
+}
+
+ObjString *makeString(const char *chars, int length) {
+    ObjString *string = ALLOCATE_STR(length);
+    string->length = length;
+    string->owned = false;
+    string->ownedString = NULL;
     memcpy(string->chars, chars, length);
     string->chars[length] = '\0';
     return string;
@@ -34,5 +44,13 @@ void printObject(Value value) {
         case OBJ_STRING:
             printf("%s", AS_CSTRING(value));
             break;
+    }
+}
+
+char *getString(ObjString *string) {
+    if (string->owned) {
+        return string->ownedString;
+    } else {
+        return string->chars;
     }
 }
