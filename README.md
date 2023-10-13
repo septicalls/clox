@@ -13,3 +13,4 @@ My implementation of clox as described by Robert Nystrom in [crafting interprete
 - [ ] Parsed C-style `?:` (ternary operator).
 - [x] Made ObjString own its character array with [flexible array members](https://en.wikipedia.org/wiki/Flexible_array_member) technique.
 - [x] Made ObjString differentiate between heap owned strings and source string literals.
+- [ ] Added support for keys of primitive types: numbers, Booleans, and nil.
