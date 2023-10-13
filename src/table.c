@@ -66,3 +66,12 @@ bool tableSet(Table *table, ObjString *key, Value value) {
     entry->value = value;
     return isNewKey;
 }
+
+void tableAddAll(Table *from, Table *to) {
+    for (int i = 0; i < from->capacity; i++) {
+        Entry *entry = &from->entries[i];
+        if (entry->key != NULL) {
+            tableSet(to, entry->key, entry->value);
+        }
+    }
+}
