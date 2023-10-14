@@ -31,10 +31,12 @@ static void runtimeError(const char *format, ...) {
 void initVM() {
     resetStack();
     vm.objects = NULL;
+    initTable(&vm.globals);
     initTable(&vm.strings);
 }
 
 void freeVM() {
+    freeTable(&vm.globals);
     freeTable(&vm.strings);
     freeObjects();
 }
@@ -74,6 +76,7 @@ static void concatenate() {
 static InterpretResult run() {
     #define READ_BYTE() (*vm.ip++)
     #define READ_CONSTANT() (vm.chunk->constants.values[READ_BYTE()])
+    #define READ_STRING() AS_STRING(READ_CONSTANT())
     #define BINARY_OP(valueType, op) \
         do { \
             if (!IS_NUMBER(peek(0)) && !IS_NUMBER(peek(1))) { \
@@ -107,6 +110,12 @@ static InterpretResult run() {
             case OP_TRUE:       push(BOOL_VAL(true)); break;
             case OP_FALSE:      push(BOOL_VAL(false)); break;
             case OP_POP:        pop(); break;
+            case OP_DEFINE_GLOBAL: {
+                ObjString *name = READ_STRING();
+                tableSet(&vm.globals, name, peek(0));
+                pop();
+                break;
+            }
             case OP_EQUAL: {
                 Value b = pop();
                 Value a = pop();
@@ -154,6 +163,7 @@ static InterpretResult run() {
     }
     #undef READ_BYTE
     #undef READ_CONSTANT
+    #undef READ_STRING
     #undef BINARY_OP
 }
 
