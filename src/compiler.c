@@ -245,6 +245,37 @@ static void declareVariable() {
     addLocal(*name);
 }
 
+static uint8_t parseVariable(const char *errorMessage) {
+    consume(TOKEN_IDENTIFIER, errorMessage);
+
+    declareVariable();
+    if (current->scopeDepth > 0) return 0;
+
+    return identifierConstant(&parser.previous);
+}
+
+static void markInitialised() {
+    current->locals[current->localCount - 1].depth = current->scopeDepth;
+}
+
+static void defineVariable(uint8_t global) {
+    if (current->scopeDepth > 0) {
+        markInitialised();
+        return;
+    }
+
+    emitBytes(OP_DEFINE_GLOBAL, global);
+}
+
+static void and_(bool canAssign) {
+    int endJump = emitJump(OP_JUMP_IF_FALSE);
+
+    emitByte(OP_POP);
+    parsePrecedence(PREC_AND);
+
+    patchJump(endJump);
+}
+
 static void binary(bool canAssign) {
     TokenType operatorType = parser.previous.type;
     ParseRule *rule = getRule(operatorType);
@@ -403,37 +434,6 @@ static void parsePrecedence(Precedence precedence) {
     }
 }
 
-static uint8_t parseVariable(const char *errorMessage) {
-    consume(TOKEN_IDENTIFIER, errorMessage);
-
-    declareVariable();
-    if (current->scopeDepth > 0) return 0;
-
-    return identifierConstant(&parser.previous);
-}
-
-static void markInitialised() {
-    current->locals[current->localCount - 1].depth = current->scopeDepth;
-}
-
-static void defineVariable(uint8_t global) {
-    if (current->scopeDepth > 0) {
-        markInitialised();
-        return;
-    }
-
-    emitBytes(OP_DEFINE_GLOBAL, global);
-}
-
-static void and_(bool canAssign) {
-    int endJump = emitJump(OP_JUMP_IF_FALSE);
-
-    emitByte(OP_POP);
-    parsePrecedence(PREC_AND);
-
-    patchJump(endJump);
-}
-
 static ParseRule* getRule(TokenType type) {
     return &rules[type];
 }
@@ -519,10 +519,6 @@ static void synchronise() {
 static void declaration() {
     if (match(TOKEN_VAR)) {
         varDeclaration();
-    } else if (match(TOKEN_LEFT_BRACE)) {
-        beginScope();
-        block();
-        endScope();
     } else {
         statement();
     }
@@ -535,6 +531,10 @@ static void statement() {
         printStatement();
     } else if (match(TOKEN_IF)) {
         ifStatement();
+    } else if (match(TOKEN_LEFT_BRACE)) {
+        beginScope();
+        block();
+        endScope();
     } else {
         expressionStatement();
     }
