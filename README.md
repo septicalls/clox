@@ -16,5 +16,5 @@ My implementation of clox as described by Robert Nystrom in [crafting interprete
 - [ ] Added support for keys of primitive types: numbers, Booleans, and nil.
 - [ ] Added support for constants (variables that cannot be re-assigned).
 - [ ] Extended clox to allow more than 256 local variables to be in scope at a time.
-- [ ] Added support for `switch` statement.
+- [x] Added support for `switch` statement.
 - [ ] Added support for `continue` statement.
