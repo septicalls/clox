@@ -197,6 +197,13 @@ static InterpretResult run() {
                 if (isFalsey(peek(0))) vm.ip += offset;
                 break;
             }
+            case OP_CASE_JUMP: {
+                uint16_t offset = READ_SHORT();
+                Value expression = pop();
+                push(BOOL_VAL(valuesEqual(expression, peek(0))));
+                if (isFalsey(pop())) vm.ip += offset;
+                break;
+            }
             case OP_LOOP: {
                 uint16_t offset = READ_SHORT();
                 vm.ip -= offset;
