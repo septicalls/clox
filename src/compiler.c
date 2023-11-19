@@ -541,6 +541,56 @@ static void ifStatement() {
     patchJump(elseJump);
 }
 
+static void switchStatement() {
+    consume(TOKEN_LEFT_PAREN, "Expect '(' after 'switch'.");
+    expression();
+    consume(TOKEN_RIGHT_PAREN, "Expect ')' after condition.");
+
+    consume(TOKEN_LEFT_BRACE, "Expect '{' before switch body.");
+
+    // Jump through exit link to first case
+    int prevCase = emitJump(OP_JUMP);
+
+    // Skip this the first time
+    const int exitPosition = currentChunk()->count;
+    int exitJump = emitJump(OP_JUMP);
+
+    while(match(TOKEN_CASE)) {
+        // Make the previous case jump to this one
+        patchJump(prevCase);
+
+        // Evaluate this case's expression
+        expression();
+        consume(TOKEN_COLON, "Expect ':' after case expression.");
+
+        // If the don't match jump to next case
+        prevCase = emitJump(OP_CASE_JUMP);
+
+        // Compile case body
+        statement();
+
+        // Exit out of switch when successfully executed
+        emitLoop(exitPosition);
+    }
+
+    // If no cases match, jump to default.
+    patchJump(prevCase);
+
+    if (match(TOKEN_DEFAULT)) {
+        consume(TOKEN_COLON, "Expect ':' after 'default'.");
+
+        statement();
+    }
+
+    consume(TOKEN_RIGHT_BRACE, "Expect '}' after switch body.");
+
+    // Exit out of switch when ...
+    patchJump(exitJump);
+
+    // Pop the switch condition off the stack
+    emitByte(OP_POP);
+}
+
 static void printStatement() {
     expression();
     consume(TOKEN_SEMICOLON, "Expect ';' after value.");
@@ -602,6 +652,8 @@ static void statement() {
         forStatement();
     } else if (match(TOKEN_IF)) {
         ifStatement();
+    } else if (match(TOKEN_SWITCH)) {
+        switchStatement();
     } else if (match(TOKEN_WHILE)) {
         whileStatement();
     } else if (match(TOKEN_LEFT_BRACE)) {
