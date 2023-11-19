@@ -85,7 +85,7 @@ static InterpretResult run() {
     (uint16_t)((frame->ip[-2] << 8) | frame->ip[-1]))
 
 #define READ_CONSTANT() \
-    (frame->function->chunk->constants.values[READ_BYTE()])
+    (frame->function->chunk.constants.values[READ_BYTE()])
 
 #define READ_STRING() AS_STRING(READ_CONSTANT())
 
@@ -232,7 +232,7 @@ InterpretResult interpret(const char *source) {
     push(OBJ_VAL(function));
     CallFrame *frame = &vm.frames[vm.frameCount++];
     frame->function = function;
-    frame->ip = function->chunk->code;
+    frame->ip = function->chunk.code;
     frame->slots = vm.stack;
 
     return run();
