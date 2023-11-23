@@ -18,3 +18,6 @@ My implementation of clox as described by Robert Nystrom in [crafting interprete
 - [ ] Extended clox to allow more than 256 local variables to be in scope at a time.
 - [x] Added support for `switch` statement.
 - [ ] Added support for `continue` statement.
+- [ ] Strored the `ip` in a CPU register.
+- [ ] Added arity checking for native functions.
+- [ ] Supported native functions to report runtime errors.
