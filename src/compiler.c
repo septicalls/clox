@@ -183,7 +183,7 @@ static void initCompiler(Compiler *compiler, FunctionType type) {
     compiler->type = type;
     compiler->localCount = 0;
     compiler->scopeDepth = 0;
-    compiler->function = NewFunction();
+    compiler->function = newFunction();
     current = compiler;
     if (type != TYPE_SCRIPT) {
         current->function->name = copyString(
@@ -532,7 +532,7 @@ static void function(FunctionType type) {
     block();
 
     ObjFunction *function = endCompiler();
-    emitBytes(OP_CONSTANT, makeConstant(OBJ_VAL(function)));
+    emitBytes(OP_CLOSURE, makeConstant(OBJ_VAL(function)));
 }
 
 static void funDeclaration() {
