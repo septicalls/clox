@@ -104,7 +104,7 @@ int disassembleInstruction(Chunk *chunk, int offset) {
         case OP_CLOSURE: {
             offset++;
             uint8_t constant = chunk->code[offset++];
-            printf("-16%s %4d ", "OP_CLOSURE", constant);
+            printf("%-16s %4d ", "OP_CLOSURE", constant);
             printValue(chunk->constants.values[constant]);
             printf("\n");
 
