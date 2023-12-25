@@ -150,7 +150,8 @@ static void closeUpvalues(Value *last) {
         ObjUpvalue *upvalue = vm.openUpvalues;
         upvalue->closed = *upvalue->location;
         upvalue->location = &upvalue->closed;
-        }
+        vm.openUpvalues = upvalue->next;
+    }
 }
 
 static bool isFalsey(Value value) {
