@@ -25,14 +25,19 @@ void *reallocate(void *pointer, size_t oldSize, size_t newSize) {
     return result;
 }
 
-void collectGarbage() {
+void markObject(Obj *object) {
+    if (object == NULL) return;
 #ifdef DEBUG_LOG_GC
-  printf("-- gc begin\n");
+    printf("%p mark ", (void *)object);
+    printValue(OBJ_VAL(object));
+    printf("\n");
 #endif
 
-#ifdef DEBUG_LOG_GC
-  printf("-- gc ends\n");
-#endif
+    object->isMarked = true;
+}
+
+void markValue(Value value) {
+    if (IS_OBJ(value)) markObject(AS_OBJ(value));
 }
 
 static void freeObject(Obj *object) {
@@ -68,6 +73,26 @@ static void freeObject(Obj *object) {
             break;
         }
     }
+}
+
+static void markRoots() {
+    for (Value *slot = vm.stack; slot < vm.stackTop; slot++) {
+        markValue(*slot);
+    }
+
+    markTable(&vm.globals);
+}
+
+void collectGarbage() {
+#ifdef DEBUG_LOG_GC
+  printf("-- gc begin\n");
+#endif
+
+    markRoots();
+
+#ifdef DEBUG_LOG_GC
+  printf("-- gc ends\n");
+#endif
 }
 
 void freeObjects() {
