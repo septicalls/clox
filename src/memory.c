@@ -2,6 +2,7 @@
 
 #include "compiler.h"
 #include "memory.h"
+#include "table.h"
 #include "vm.h"
 
 #ifdef DEBUG_LOG_GC
@@ -179,6 +180,7 @@ void collectGarbage() {
 
     markRoots();
     traceReferences();
+    tableRemoveWhite(&vm.strings);
     sweep();
 
 #ifdef DEBUG_LOG_GC
