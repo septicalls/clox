@@ -21,3 +21,5 @@ My implementation of clox as described by Robert Nystrom in [crafting interprete
 - [ ] Strored the `ip` in a CPU register.
 - [ ] Added arity checking for native functions.
 - [ ] Supported native functions to report runtime errors.
+- [ ] Made a compact Obj header.
+- [ ] Efficiently cleared `isMarked` field during garbage collection cycles.
