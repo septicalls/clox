@@ -131,7 +131,7 @@ static void freeObject(Obj *object) {
             break;
         }
         case OBJ_INSTANCE: {
-            ObjInstance *instance = (ObjInstance *)instance;
+            ObjInstance *instance = (ObjInstance *)object;
             freeTable(&instance->fields);
             FREE(ObjInstance, object);
             break;
