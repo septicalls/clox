@@ -23,3 +23,5 @@ My implementation of clox as described by Robert Nystrom in [crafting interprete
 - [ ] Supported native functions to report runtime errors.
 - [ ] Made a compact Obj header.
 - [ ] Efficiently cleared `isMarked` field during garbage collection cycles.
+- [ ] Object fields can be accessed by any string constructed string in Lox.
+- [ ] Object fields can be deleted permanently.
