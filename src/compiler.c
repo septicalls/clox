@@ -376,7 +376,7 @@ static void defineVariable(uint8_t global) {
     emitBytes(OP_DEFINE_GLOBAL, global);
 }
 
-static uint8_t argumentList() {
+static uint8_t arguementList() {
     uint8_t argCount = 0;
     if (!check(TOKEN_RIGHT_PAREN)) {
         do {
@@ -421,7 +421,7 @@ static void binary(bool canAssign) {
 }
 
 static void call(bool canAssign) {
-    uint8_t argCount = argumentList();
+    uint8_t argCount = arguementList();
     emitBytes(OP_CALL, argCount);
 }
 
@@ -432,6 +432,10 @@ static void dot(bool canAssign) {
     if (canAssign && match(TOKEN_EQUAL)) {
         expression();
         emitBytes(OP_SET_PROPERTY, name);
+    } else if (match(TOKEN_LEFT_PAREN)) {
+        uint8_t argCount = arguementList();
+        emitBytes(OP_INVOKE, name);
+        emitByte(argCount);
     } else {
         emitBytes(OP_GET_PROPERTY, name);
     }
