@@ -26,3 +26,4 @@ My implementation of clox as described by Robert Nystrom in [crafting interprete
 - [ ] Object fields can be accessed by any string constructed string in Lox.
 - [ ] Object fields can be deleted permanently.
 - [ ] `init()` methods are accessed faster.
+- [ ] Implemented BETA-style method resolution.
