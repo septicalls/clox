@@ -19,6 +19,7 @@ typedef struct ObjString ObjString;
 
 typedef uint64_t Value;
 
+#define IS_BOOL(value)      (((value) | 1) == TRUE_VAL)
 #define IS_NIL(value)       ((value) == NIL_VAL)
 #define IS_NUMBER(value)    (((value) & QNAN) != QNAN)
 #define IS_OBJ(value)       \
@@ -35,7 +36,7 @@ typedef uint64_t Value;
 #define NIL_VAL             ((Value)(uint64_t)(QNAN | TAG_NIL))
 #define NUMBER_VAL(num)     numToValue(num)
 #define OBJ_VAL(obj)        \
-    (Value)(SIGN_BIT | QNAN (uint64_t)(uintptr_t)(obj))
+    (Value)(SIGN_BIT | QNAN | (uint64_t)(uintptr_t)(obj))
 
 static inline double valueToNum(Value value) {
     double num;
@@ -67,8 +68,6 @@ typedef struct {
     } as;
 } Value;
 
-#endif
-
 #define IS_BOOL(value)          ((value).type == VAL_BOOL)
 #define IS_NIL(value)           ((value).type == VAL_NIL)
 #define IS_NUMBER(value)        ((value).type == VAL_NUMBER)
@@ -82,6 +81,8 @@ typedef struct {
 #define NIL_VAL                 ((Value){VAL_NIL, {.number = 0}})
 #define NUMBER_VAL(value)       ((Value){VAL_NUMBER, {.number = value}})
 #define OBJ_VAL(object)         ((Value){VAL_OBJ, {.obj = (Obj *)object}})
+
+#endif
 
 typedef struct {
     int capacity;

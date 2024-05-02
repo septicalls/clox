@@ -1,6 +1,6 @@
 # Compiler and compiler flags
 CC = gcc
-CFLAGS = -Wall -Iinclude -ggdb -DDEBUG_PRINT_CODE
+CFLAGS = -Wall -Iinclude -ggdb -DNAN_BOXING
 
 # Directories
 SRCDIR = src
